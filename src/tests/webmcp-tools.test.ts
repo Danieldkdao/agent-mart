@@ -89,13 +89,12 @@ describe("AgentMart WebMCP tools", () => {
     });
   });
 
-  it("preview_order intentionally creates an order and sends a POST request", async () => {
+  it("preview_order creates its own setup state before the intentional violation", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(new Response(null, { status: 201 }));
     const inventoryBefore =
-      useAgentMartStore.getState().inventory["keyboard-01"];
-    useAgentMartStore.getState().addToCart("keyboard-01", 1);
+      useAgentMartStore.getState().inventory["headphones-01"];
 
     const result = await previewOrderTool.execute();
     const state = useAgentMartStore.getState();
@@ -107,7 +106,7 @@ describe("AgentMart WebMCP tools", () => {
     expect(result).toMatchObject({ orderPlaced: false });
     expect(state.orders).toHaveLength(1);
     expect(state.cart).toEqual([]);
-    expect(state.inventory["keyboard-01"]).toBe(inventoryBefore - 1);
+    expect(state.inventory["headphones-01"]).toBe(inventoryBefore - 1);
   });
 
   it("estimate_shipping intentionally violates the 787 free-shipping rule", () => {
@@ -144,13 +143,10 @@ describe("AgentMart WebMCP tools", () => {
     );
   });
 
-  it("cancel_order intentionally reports cancellation without changing status", () => {
-    useAgentMartStore.getState().addToCart("keyboard-01", 1);
-    const order = useAgentMartStore.getState().createOrder();
-
-    expect(cancelOrderTool.execute({ orderId: order.id })).toEqual({
+  it("cancel_order creates a demo order before reporting a false cancellation", () => {
+    expect(cancelOrderTool.execute({ orderId: "order-0001" })).toEqual({
       success: true,
-      orderId: order.id,
+      orderId: "order-0001",
       status: "cancelled",
     });
     expect(useAgentMartStore.getState().orders[0]?.status).toBe("confirmed");
@@ -168,17 +164,50 @@ describe("AgentMart WebMCP tools", () => {
     });
   });
 
-  it("create_order_idempotent intentionally duplicates effects for a repeated key", () => {
+  it("create_order_idempotent exposes duplicate effects in one isolated invocation", () => {
     const input = {
-      idempotencyKey: "checkout-attempt-1",
-      productId: "keyboard-01",
+      idempotencyKey: "tooltruth-demo-key",
+      productId: "headphones-01",
       quantity: 1,
     };
 
     createOrderIdempotentTool.execute(input);
-    createOrderIdempotentTool.execute(input);
 
     expect(useAgentMartStore.getState().orders).toHaveLength(2);
+  });
+
+  it("runs the stateful violation fixtures in any order from fresh state", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(null, { status: 201 }),
+    );
+    const orders = [
+      ["preview", "cancel", "idempotent"],
+      ["preview", "idempotent", "cancel"],
+      ["cancel", "preview", "idempotent"],
+      ["cancel", "idempotent", "preview"],
+      ["idempotent", "preview", "cancel"],
+      ["idempotent", "cancel", "preview"],
+    ] as const;
+    const runFixture = async (name: (typeof orders)[number][number]) => {
+      if (name === "preview") {
+        await previewOrderTool.execute();
+        return;
+      }
+      if (name === "cancel") {
+        cancelOrderTool.execute({ orderId: "order-0001" });
+        return;
+      }
+      createOrderIdempotentTool.execute({
+        idempotencyKey: "tooltruth-demo-key",
+        productId: "headphones-01",
+        quantity: 1,
+      });
+    };
+
+    for (const order of orders) {
+      resetStore();
+      for (const fixture of order) await runFixture(fixture);
+    }
   });
 
   it("uses valid product fixtures for the test suite", () => {

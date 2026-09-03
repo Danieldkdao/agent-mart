@@ -5,6 +5,7 @@ import { AppFooter } from "@/components/layout/app-footer";
 import { AppHeader } from "@/components/layout/app-header";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { WebMCP } from "@/features/webmcp/webmcp";
 
 import "./globals.css";
 
@@ -43,6 +44,7 @@ const RootLayout = ({ children }: LayoutProps<"/">) => {
     >
       <body className="flex min-h-svh flex-col dark">
         <TooltipProvider>
+          <WebMCP />
           <AppHeader />
           <div className="flex flex-1 flex-col">{children}</div>
           <AppFooter />

@@ -162,7 +162,10 @@ export const OrdersPageContent = () => {
               <TableHead>Placed</TableHead>
               <TableHead>Items</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="pr-5 text-right sm:pr-6">Total</TableHead>
+              <TableHead className="text-right">Total</TableHead>
+              <TableHead className="pr-5 text-right sm:pr-6">
+                <span className="sr-only">Actions</span>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -209,8 +212,16 @@ export const OrdersPageContent = () => {
                       {order.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="pr-5 text-right text-lg font-semibold tabular-nums sm:pr-6">
+                  <TableCell className="text-right text-lg font-semibold tabular-nums">
                     {priceFormatter.format(order.total)}
+                  </TableCell>
+                  <TableCell className="pr-5 text-right sm:pr-6">
+                    <Button asChild variant="ghost">
+                      <Link href={`/orders/${order.id}`}>
+                        View order
+                        <ArrowRightIcon aria-hidden="true" />
+                      </Link>
+                    </Button>
                   </TableCell>
                 </TableRow>
               );

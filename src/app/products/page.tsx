@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { Badge } from "@/components/ui/badge";
 import { PRODUCTS } from "@/data/products";
 import { ProductsCatalog } from "@/features/products/components/products-catalog";
 

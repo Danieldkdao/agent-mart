@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ArrowRightIcon, ShoppingBagIcon } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { LoadingSwap } from "@/components/ui/loading-swap";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -24,6 +26,13 @@ const priceFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 });
+
+const CHECKOUT_DELAY_MS = 2000;
+
+const waitForCheckout = () =>
+  new Promise<void>((resolve) => {
+    window.setTimeout(resolve, CHECKOUT_DELAY_MS);
+  });
 
 const CartLoadingState = () => (
   <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:px-8">
@@ -57,13 +66,16 @@ const EmptyCart = () => (
 );
 
 export const CartPageContent = () => {
+  const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
   const cart = useAgentMartStore((state) => state.cart);
   const inventory = useAgentMartStore((state) => state.inventory);
   const hasHydrated = useAgentMartStore((state) => state.hasHydrated);
   const addToCart = useAgentMartStore((state) => state.addToCart);
   const updateQuantity = useAgentMartStore((state) => state.updateQuantity);
   const removeFromCart = useAgentMartStore((state) => state.removeFromCart);
+  const createOrder = useAgentMartStore((state) => state.createOrder);
   const subtotal = useAgentMartStore(selectCartSubtotal);
   const cartLines = cart.flatMap((item) => {
     const product = PRODUCTS_BY_ID.get(item.productId);
@@ -97,6 +109,29 @@ export const CartPageContent = () => {
     setErrorMessage(null);
   };
 
+  const handleCheckout = async () => {
+    if (isCheckingOut || cartLines.length === 0) {
+      return;
+    }
+
+    setIsCheckingOut(true);
+    setErrorMessage(null);
+
+    await waitForCheckout();
+
+    try {
+      const order = createOrder();
+      toast.success(`Order ${order.orderNumber} was created successfully.`);
+      router.push("/orders");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Unable to create your order.";
+      setErrorMessage(message);
+      setIsCheckingOut(false);
+      toast.error(message);
+    }
+  };
+
   if (!hasHydrated) {
     return <CartLoadingState />;
   }
@@ -121,7 +156,8 @@ export const CartPageContent = () => {
           <div className="flex items-center justify-between gap-4 border-b px-5 py-5 sm:px-6">
             <h2 className="font-serif text-2xl font-semibold">Cart items</h2>
             <p className="text-base text-muted-foreground">
-              {cartLines.length} {cartLines.length === 1 ? "product" : "products"}
+              {cartLines.length}{" "}
+              {cartLines.length === 1 ? "product" : "products"}
             </p>
           </div>
           <Table className="min-w-[760px]">
@@ -143,6 +179,7 @@ export const CartPageContent = () => {
                   product={product}
                   quantity={quantity}
                   availableInventory={inventory[productId] ?? 0}
+                  disabled={isCheckingOut}
                   onIncrement={() => handleIncrement(productId)}
                   onDecrement={() => handleDecrement(productId, quantity)}
                   onRemove={() => handleRemove(productId)}
@@ -173,54 +210,41 @@ export const CartPageContent = () => {
                   {priceFormatter.format(subtotal)}
                 </dd>
               </div>
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-muted-foreground">Discount</dt>
-                <dd className="font-medium tabular-nums">{priceFormatter.format(0)}</dd>
-              </div>
               <div className="flex items-start justify-between gap-4">
                 <dt className="text-muted-foreground">Shipping</dt>
-                <dd className="text-right font-medium">Calculated at checkout</dd>
+                <dd className="text-right font-medium">
+                  Calculated at checkout
+                </dd>
               </div>
             </dl>
 
             <Separator />
 
-            <div className="flex items-end justify-between gap-4" aria-live="polite">
+            <div
+              className="flex items-end justify-between gap-4"
+              aria-live="polite"
+            >
               <p className="font-semibold">Total</p>
               <p className="text-2xl font-semibold tracking-tight tabular-nums">
                 {priceFormatter.format(subtotal)}
               </p>
             </div>
 
-            <div>
-              <label htmlFor="coupon-code" className="mb-2 block font-medium">
-                Coupon code
-              </label>
-              <div className="flex gap-2">
-                <Input
-                  id="coupon-code"
-                  placeholder="Enter code"
-                  disabled
-                  aria-describedby="coupon-help"
-                />
-                <Button type="button" variant="outline" disabled>
-                  Apply
-                </Button>
-              </div>
-              <p id="coupon-help" className="mt-2 text-base text-muted-foreground">
-                Coupon support is coming next.
-              </p>
-            </div>
-
             <Button
               type="button"
               size="lg"
-              className="h-11 w-full text-base disabled:opacity-100"
-              disabled
-              title="Checkout functionality is coming soon"
+              className="h-11 w-full text-base"
+              disabled={isCheckingOut}
+              aria-busy={isCheckingOut}
+              aria-label={isCheckingOut ? "Creating order" : "Checkout"}
+              onClick={handleCheckout}
             >
-              Checkout
-              <ArrowRightIcon aria-hidden="true" />
+              <LoadingSwap isLoading={isCheckingOut}>
+                <span className="inline-flex items-center justify-center gap-2">
+                  Checkout
+                  <ArrowRightIcon aria-hidden="true" />
+                </span>
+              </LoadingSwap>
             </Button>
           </CardContent>
         </Card>

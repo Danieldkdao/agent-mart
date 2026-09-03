@@ -15,5 +15,8 @@ export type {
   AgentMartStoreActions,
   AgentMartStoreState,
   CartItem,
+  Order,
+  OrderItem,
+  OrderStatus,
   PersistedAgentMartState,
 } from "@/store/store-types";

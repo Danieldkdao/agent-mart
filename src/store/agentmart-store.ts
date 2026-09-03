@@ -8,6 +8,7 @@ import type {
   AgentMartStore,
   AgentMartStoreState,
   CartItem,
+  Order,
   PersistedAgentMartState,
 } from "@/store/store-types";
 
@@ -24,6 +25,7 @@ const createInitialInventory = () =>
 export const createInitialAgentMartState = (): PersistedAgentMartState => ({
   inventory: createInitialInventory(),
   cart: INITIAL_CART.map((item) => ({ ...item })),
+  orders: [],
 });
 
 const assertProductExists = (productId: string) => {
@@ -128,6 +130,72 @@ export const useAgentMartStore = create<AgentMartStore>()(
 
       clearCart: () => set({ cart: [] }),
 
+      createOrder: () => {
+        const state = get();
+
+        if (state.cart.length === 0) {
+          throw new Error("Your cart is empty.");
+        }
+
+        const items = state.cart.map((item) => {
+          const product = PRODUCTS_BY_ID.get(item.productId);
+
+          if (!product) {
+            throw new Error(`Unknown AgentMart product: ${item.productId}`);
+          }
+
+          assertInventoryAvailable(
+            state.inventory,
+            item.productId,
+            item.quantity,
+          );
+
+          return {
+            ...item,
+            productName: product.name,
+            unitPrice: product.price,
+          };
+        });
+        const subtotal = items.reduce(
+          (total, item) => total + item.unitPrice * item.quantity,
+          0,
+        );
+        const shipping = 0;
+        const orderSequence = state.orders.length + 1;
+        const orderId = `order-${String(orderSequence).padStart(4, "0")}`;
+        const order: Order = {
+          id: orderId,
+          orderNumber: `AM-${String(1000 + orderSequence)}`,
+          items,
+          subtotal,
+          shipping,
+          total: subtotal + shipping,
+          status: "confirmed",
+          createdAt: new Date().toISOString(),
+        };
+
+        set((currentState) => ({
+          inventory: Object.fromEntries(
+            Object.entries(currentState.inventory).map(
+              ([productId, availableQuantity]) => {
+                const orderedItem = items.find(
+                  (item) => item.productId === productId,
+                );
+
+                return [
+                  productId,
+                  availableQuantity - (orderedItem?.quantity ?? 0),
+                ];
+              },
+            ),
+          ),
+          cart: [],
+          orders: [...currentState.orders, order],
+        }));
+
+        return order;
+      },
+
       resetDemo: () => {
         set({
           ...createInitialAgentMartState(),
@@ -141,7 +209,11 @@ export const useAgentMartStore = create<AgentMartStore>()(
       name: STORAGE_KEY,
       version: FIXTURE_VERSION,
       storage: createJSONStorage(() => localStorage),
-      partialize: ({ inventory, cart }) => ({ inventory, cart }),
+      partialize: ({ inventory, cart, orders }) => ({
+        inventory,
+        cart,
+        orders,
+      }),
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);
       },

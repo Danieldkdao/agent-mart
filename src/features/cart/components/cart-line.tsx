@@ -11,6 +11,7 @@ type CartLineProps = {
   product: Product;
   quantity: number;
   availableInventory: number;
+  disabled?: boolean;
   onDecrement: () => void;
   onIncrement: () => void;
   onRemove: () => void;
@@ -25,6 +26,7 @@ export const CartLine = ({
   product,
   quantity,
   availableInventory,
+  disabled = false,
   onDecrement,
   onIncrement,
   onRemove,
@@ -70,6 +72,7 @@ export const CartLine = ({
           size="icon-lg"
           className="rounded-r-none"
           onClick={onDecrement}
+          disabled={disabled}
           aria-label={`Decrease ${product.name} quantity`}
         >
           <MinusIcon aria-hidden="true" />
@@ -77,6 +80,7 @@ export const CartLine = ({
         <Input
           value={quantity}
           readOnly
+          disabled={disabled}
           inputMode="numeric"
           aria-label={`${product.name} quantity`}
           className="h-9 w-14 rounded-none border-x-0 text-center tabular-nums focus-visible:z-10"
@@ -87,7 +91,7 @@ export const CartLine = ({
           size="icon-lg"
           className="rounded-l-none"
           onClick={onIncrement}
-          disabled={quantity >= availableInventory}
+          disabled={disabled || quantity >= availableInventory}
           aria-label={`Increase ${product.name} quantity`}
         >
           <PlusIcon aria-hidden="true" />
@@ -106,6 +110,7 @@ export const CartLine = ({
         variant="ghost"
         className="text-destructive hover:bg-destructive/10 hover:text-destructive"
         onClick={onRemove}
+        disabled={disabled}
         aria-label={`Remove ${product.name} from cart`}
       >
         <Trash2Icon aria-hidden="true" />

@@ -3,6 +3,7 @@ import { Fraunces, Outfit } from "next/font/google";
 
 import { AppFooter } from "@/components/layout/app-footer";
 import { AppHeader } from "@/components/layout/app-header";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 import "./globals.css";
@@ -45,6 +46,7 @@ const RootLayout = ({ children }: LayoutProps<"/">) => {
           <AppHeader />
           <div className="flex flex-1 flex-col">{children}</div>
           <AppFooter />
+          <Toaster position="top-center" richColors />
         </TooltipProvider>
       </body>
     </html>

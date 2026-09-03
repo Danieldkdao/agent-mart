@@ -11,15 +11,10 @@ import type {
   PersistedAgentMartState,
 } from "@/store/store-types";
 
-export const FIXTURE_VERSION = 1;
+export const FIXTURE_VERSION = 2;
 export const STORAGE_KEY = `agentmart-fixture-v${FIXTURE_VERSION}`;
 
-const INITIAL_CART: readonly CartItem[] = [
-  {
-    productId: "headphones-01",
-    quantity: 1,
-  },
-];
+const INITIAL_CART: readonly CartItem[] = [];
 
 const createInitialInventory = () =>
   Object.fromEntries(

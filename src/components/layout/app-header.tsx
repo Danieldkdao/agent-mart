@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MenuIcon, ShoppingCartIcon, StoreIcon } from "lucide-react";
+import { MenuIcon, StoreIcon } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { CartCount } from "@/features/cart/components/cart-count";
 
 const NAVIGATION_LINKS = [
   { href: "/", label: "Home" },
@@ -55,22 +56,7 @@ export const AppHeader = () => (
           </a>
         </Button>
 
-        <Button
-          asChild
-          variant="ghost"
-          size="icon-lg"
-          className="relative rounded-full"
-        >
-          <Link href="/cart" aria-label="Cart, 0 items">
-            <ShoppingCartIcon className="size-5" aria-hidden="true" />
-            <span
-              className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-primary text-base leading-none font-semibold text-primary-foreground ring-2 ring-background"
-              aria-hidden="true"
-            >
-              0
-            </span>
-          </Link>
-        </Button>
+        <CartCount />
 
         <Sheet>
           <SheetTrigger asChild>

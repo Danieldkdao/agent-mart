@@ -5,19 +5,15 @@ import { notFound } from "next/navigation";
 import {
   CheckIcon,
   ChevronLeftIcon,
-  MinusIcon,
-  PlusIcon,
-  ShieldCheckIcon,
-  ShoppingCartIcon,
   StarIcon,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { PRODUCTS, PRODUCTS_BY_ID } from "@/data/products";
+import { ProductPurchaseControls } from "@/features/products/components/product-purchase-controls";
 
 type ProductPageProps = {
   params: Promise<{ productId: string }>;
@@ -140,68 +136,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
               </div>
             </div>
 
-            <Card className="mt-7 gap-0">
-              <CardContent className="p-5 sm:p-6">
-                <div className="flex flex-col gap-5 sm:flex-row sm:items-end">
-                  <div>
-                    <label htmlFor="product-quantity" className="mb-2 block text-base font-medium">
-                      Quantity
-                    </label>
-                    <div className="flex items-center">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon-lg"
-                        className="rounded-r-none disabled:opacity-100"
-                        disabled
-                        aria-label="Decrease quantity"
-                        title="Quantity controls are coming soon"
-                      >
-                        <MinusIcon aria-hidden="true" />
-                      </Button>
-                      <Input
-                        id="product-quantity"
-                        value="1"
-                        readOnly
-                        inputMode="numeric"
-                        aria-label="Product quantity"
-                        className="h-9 w-14 rounded-none border-x-0 text-center tabular-nums focus-visible:z-10"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon-lg"
-                        className="rounded-l-none disabled:opacity-100"
-                        disabled
-                        aria-label="Increase quantity"
-                        title="Quantity controls are coming soon"
-                      >
-                        <PlusIcon aria-hidden="true" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  <Button
-                    type="button"
-                    size="lg"
-                    className="h-11 flex-1 text-base disabled:opacity-100"
-                    disabled
-                    title="Cart functionality is coming soon"
-                  >
-                    <ShoppingCartIcon aria-hidden="true" />
-                    Add to cart
-                  </Button>
-                </div>
-
-                <div className="mt-5 flex items-start gap-2 rounded-lg bg-muted/60 p-3 text-base leading-5 text-muted-foreground">
-                  <ShieldCheckIcon className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                  <p>
-                    Purchase controls are shown for this demo. Cart functionality will be
-                    connected in a later step.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            <ProductPurchaseControls productId={product.id} />
           </section>
         </div>
 

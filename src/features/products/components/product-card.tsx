@@ -1,10 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCartIcon, StarIcon } from "lucide-react";
+import { StarIcon } from "lucide-react";
 
 import type { Product } from "@/data/products";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { AddToCartButton } from "@/features/cart/components/add-to-cart-button";
 
 type ProductCardProps = {
   product: Product;
@@ -83,15 +83,7 @@ export const ProductCard = ({ product }: ProductCardProps) => (
     </CardContent>
 
     <CardFooter className="border-t bg-muted/30 px-5 py-4">
-      <Button
-        type="button"
-        className="w-full"
-        disabled
-        title="Cart functionality is coming soon"
-      >
-        <ShoppingCartIcon aria-hidden="true" />
-        Add to cart
-      </Button>
+      <AddToCartButton productId={product.id} />
     </CardFooter>
   </Card>
 );

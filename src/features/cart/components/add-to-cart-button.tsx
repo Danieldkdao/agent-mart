@@ -44,7 +44,7 @@ export const AddToCartButton = ({ productId }: AddToCartButtonProps) => {
       >
         <ShoppingCartIcon aria-hidden="true" />
         {isAtInventoryLimit
-          ? "Maximum in cart"
+          ? "Out of stock"
           : quantityInCart > 0
             ? "Add another"
             : "Add to cart"}

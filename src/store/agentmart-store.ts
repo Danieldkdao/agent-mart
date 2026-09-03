@@ -38,6 +38,12 @@ const assertValidQuantity = (quantity: number) => {
   }
 };
 
+const assertValidUpdatedQuantity = (quantity: number) => {
+  if (!Number.isSafeInteger(quantity) || quantity < 0) {
+    throw new RangeError("Updated cart quantity must be a non-negative integer.");
+  }
+};
+
 const assertInventoryAvailable = (
   inventory: Record<string, number>,
   productId: string,
@@ -91,7 +97,7 @@ export const useAgentMartStore = create<AgentMartStore>()(
 
       updateQuantity: (productId, quantity) => {
         assertProductExists(productId);
-        assertValidQuantity(quantity);
+        assertValidUpdatedQuantity(quantity);
 
         const state = get();
         const existingItem = state.cart.find(
@@ -100,6 +106,15 @@ export const useAgentMartStore = create<AgentMartStore>()(
 
         if (!existingItem) {
           throw new Error(`Product is not currently in the cart: ${productId}`);
+        }
+
+        if (quantity === 0) {
+          set((currentState) => ({
+            cart: currentState.cart.filter(
+              (item) => item.productId !== productId,
+            ),
+          }));
+          return;
         }
 
         assertInventoryAvailable(state.inventory, productId, quantity);

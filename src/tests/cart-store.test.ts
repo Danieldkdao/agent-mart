@@ -67,6 +67,30 @@ describe("AgentMart cart store", () => {
     ).toBe(false);
   });
 
+  it("decrements an existing cart line", () => {
+    useAgentMartStore.getState().addToCart("keyboard-01", 3);
+    useAgentMartStore.getState().updateQuantity("keyboard-01", 2);
+
+    expect(useAgentMartStore.getState().cart).toContainEqual({
+      productId: "keyboard-01",
+      quantity: 2,
+    });
+  });
+
+  it("removes a cart line automatically when its quantity reaches zero", () => {
+    useAgentMartStore.getState().addToCart("keyboard-01", 1);
+    useAgentMartStore.getState().updateQuantity("keyboard-01", 0);
+
+    expect(useAgentMartStore.getState().cart).toEqual([]);
+  });
+
+  it("removes a cart line through the explicit remove action", () => {
+    useAgentMartStore.getState().addToCart("keyboard-01", 1);
+    useAgentMartStore.getState().removeFromCart("keyboard-01");
+
+    expect(useAgentMartStore.getState().cart).toEqual([]);
+  });
+
   it("restores the deterministic fixture state", () => {
     useAgentMartStore.getState().addToCart("keyboard-01", 2);
     useAgentMartStore.getState().resetDemo();

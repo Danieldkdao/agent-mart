@@ -12,3 +12,4 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 - Use arrow functions for all project-authored JavaScript and TypeScript functions, including React components, hooks, helpers, and callbacks. Do not introduce `function` declarations or function expressions.
 - User-facing text must never render smaller than Tailwind's `text-base` size (1rem / 16px). Use `text-base` or a larger text utility; do not add `text-xs`, `text-sm`, or arbitrary font sizes below 1rem.
+- Do not place decorative or redundant badges above page headings when they merely repeat the page title or context. Badges are appropriate when they communicate useful information such as product category, inventory, status, or featured state.

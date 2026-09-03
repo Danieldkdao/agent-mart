@@ -86,7 +86,7 @@ export const ProductsCatalog = ({ products }: ProductsCatalogProps) => {
       <div className="mb-7 rounded-xl border bg-card p-4 shadow-sm sm:p-5">
         <div className="flex flex-col gap-4 md:flex-row md:items-end">
           <div className="min-w-0 flex-1">
-            <label htmlFor="product-search" className="mb-2 block text-sm font-medium">
+            <label htmlFor="product-search" className="mb-2 block text-base font-medium">
               Search products
             </label>
             <div className="relative">
@@ -106,7 +106,7 @@ export const ProductsCatalog = ({ products }: ProductsCatalogProps) => {
           </div>
 
           <div className="md:w-56">
-            <label htmlFor="product-sort" className="mb-2 block text-sm font-medium">
+            <label htmlFor="product-sort" className="mb-2 block text-base font-medium">
               Sort by
             </label>
             <Select
@@ -129,7 +129,7 @@ export const ProductsCatalog = ({ products }: ProductsCatalogProps) => {
       </div>
 
       <div className="mb-5 flex items-center justify-between gap-4">
-        <p className="text-sm text-muted-foreground" aria-live="polite">
+        <p className="text-base text-muted-foreground" aria-live="polite">
           Showing <span className="font-medium text-foreground">{visibleProducts.length}</span>{" "}
           {visibleProducts.length === 1 ? "product" : "products"}
         </p>
@@ -152,7 +152,7 @@ export const ProductsCatalog = ({ products }: ProductsCatalogProps) => {
             <SearchXIcon className="size-6" aria-hidden="true" />
           </span>
           <h2 className="font-serif text-2xl font-semibold">No products found</h2>
-          <p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">
+          <p className="mt-2 max-w-sm text-base leading-6 text-muted-foreground">
             Try a different product name, category, or feature.
           </p>
           <Button variant="outline" className="mt-5" onClick={() => setSearch("")}>

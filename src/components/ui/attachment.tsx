@@ -11,9 +11,9 @@ const attachmentVariants = cva(
     variants: {
       size: {
         default:
-          "gap-2 text-sm has-data-[slot=attachment-content]:px-2.5 has-data-[slot=attachment-content]:py-2 has-data-[slot=attachment-media]:p-2",
-        sm: "gap-2.5 text-xs has-data-[slot=attachment-content]:px-2 has-data-[slot=attachment-content]:py-1.5 has-data-[slot=attachment-media]:p-1.5",
-        xs: "gap-1.5 rounded-lg text-xs has-data-[slot=attachment-content]:px-1.5 has-data-[slot=attachment-content]:py-1 has-data-[slot=attachment-media]:p-1",
+          "gap-2 text-base has-data-[slot=attachment-content]:px-2.5 has-data-[slot=attachment-content]:py-2 has-data-[slot=attachment-media]:p-2",
+        sm: "gap-2.5 text-base has-data-[slot=attachment-content]:px-2 has-data-[slot=attachment-content]:py-1.5 has-data-[slot=attachment-media]:p-1.5",
+        xs: "gap-1.5 rounded-lg text-base has-data-[slot=attachment-content]:px-1.5 has-data-[slot=attachment-content]:py-1 has-data-[slot=attachment-media]:p-1",
       },
       orientation: {
         horizontal: "min-w-40 items-center",
@@ -23,7 +23,7 @@ const attachmentVariants = cva(
   }
 )
 
-function Attachment({
+const Attachment = ({
   className,
   state = "done",
   size = "default",
@@ -32,7 +32,7 @@ function Attachment({
 }: React.ComponentProps<"div"> &
   VariantProps<typeof attachmentVariants> & {
     state?: "idle" | "uploading" | "processing" | "error" | "done"
-  }) {
+  }) => {
   return (
     <div
       data-slot="attachment"
@@ -43,7 +43,7 @@ function Attachment({
       {...props}
     />
   )
-}
+};
 
 const attachmentMediaVariants = cva(
   "relative flex aspect-square w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted text-foreground group-data-[orientation=vertical]/attachment:w-full group-data-[size=sm]/attachment:w-8 group-data-[size=xs]/attachment:w-7 group-data-[size=xs]/attachment:rounded-md group-data-[state=error]/attachment:bg-destructive/10 group-data-[state=error]/attachment:text-destructive group-data-[orientation=vertical]/attachment:*:data-[slot=spinner]:size-6! [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 group-data-[orientation=vertical]/attachment:[&_svg:not([class*='size-'])]:size-6 group-data-[size=xs]/attachment:[&_svg:not([class*='size-'])]:size-3.5",
@@ -61,11 +61,11 @@ const attachmentMediaVariants = cva(
   }
 )
 
-function AttachmentMedia({
+const AttachmentMedia = ({
   className,
   variant = "icon",
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof attachmentMediaVariants>) {
+}: React.ComponentProps<"div"> & VariantProps<typeof attachmentMediaVariants>) => {
   return (
     <div
       data-slot="attachment-media"
@@ -74,12 +74,12 @@ function AttachmentMedia({
       {...props}
     />
   )
-}
+};
 
-function AttachmentContent({
+const AttachmentContent = ({
   className,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div">) => {
   return (
     <div
       data-slot="attachment-content"
@@ -90,12 +90,12 @@ function AttachmentContent({
       {...props}
     />
   )
-}
+};
 
-function AttachmentTitle({
+const AttachmentTitle = ({
   className,
   ...props
-}: React.ComponentProps<"span">) {
+}: React.ComponentProps<"span">) => {
   return (
     <span
       data-slot="attachment-title"
@@ -106,29 +106,29 @@ function AttachmentTitle({
       {...props}
     />
   )
-}
+};
 
-function AttachmentDescription({
+const AttachmentDescription = ({
   className,
   ...props
-}: React.ComponentProps<"span">) {
+}: React.ComponentProps<"span">) => {
   return (
     <span
       data-slot="attachment-description"
       className={cn(
-        "mt-0.5 block min-w-0 truncate text-xs text-muted-foreground group-data-[state=error]/attachment:text-destructive/80",
+        "mt-0.5 block min-w-0 truncate text-base text-muted-foreground group-data-[state=error]/attachment:text-destructive/80",
         "max-w-full",
         className
       )}
       {...props}
     />
   )
-}
+};
 
-function AttachmentActions({
+const AttachmentActions = ({
   className,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div">) => {
   return (
     <div
       data-slot="attachment-actions"
@@ -139,14 +139,14 @@ function AttachmentActions({
       {...props}
     />
   )
-}
+};
 
-function AttachmentAction({
+const AttachmentAction = ({
   className,
   variant,
   size = "icon-xs",
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentProps<typeof Button>) => {
   return (
     <Button
       data-slot="attachment-action"
@@ -156,16 +156,16 @@ function AttachmentAction({
       {...props}
     />
   )
-}
+};
 
-function AttachmentTrigger({
+const AttachmentTrigger = ({
   className,
   asChild = false,
   type,
   ...props
 }: React.ComponentProps<"button"> & {
   asChild?: boolean
-}) {
+}) => {
   const Comp = asChild ? Slot.Root : "button"
 
   return (
@@ -176,9 +176,9 @@ function AttachmentTrigger({
       {...props}
     />
   )
-}
+};
 
-function AttachmentGroup({ className, ...props }: React.ComponentProps<"div">) {
+const AttachmentGroup = ({ className, ...props }: React.ComponentProps<"div">) => {
   return (
     <div
       data-slot="attachment-group"
@@ -189,7 +189,7 @@ function AttachmentGroup({ className, ...props }: React.ComponentProps<"div">) {
       {...props}
     />
   )
-}
+};
 
 export {
   Attachment,

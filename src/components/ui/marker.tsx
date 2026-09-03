@@ -5,7 +5,7 @@ import { Slot } from "radix-ui"
 import { cn } from "@/lib/utils"
 
 const markerVariants = cva(
-  "group/marker relative flex min-h-4 w-full items-center gap-2 text-left text-sm text-muted-foreground [&_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground",
+  "group/marker relative flex min-h-4 w-full items-center gap-2 text-left text-base text-muted-foreground [&_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground",
   {
     variants: {
       variant: {
@@ -18,7 +18,7 @@ const markerVariants = cva(
   }
 )
 
-function Marker({
+const Marker = ({
   className,
   variant = "default",
   asChild = false,
@@ -26,7 +26,7 @@ function Marker({
 }: React.ComponentProps<"div"> &
   VariantProps<typeof markerVariants> & {
     asChild?: boolean
-  }) {
+  }) => {
   const Comp = asChild ? Slot.Root : "div"
 
   return (
@@ -37,9 +37,9 @@ function Marker({
       {...props}
     />
   )
-}
+};
 
-function MarkerIcon({ className, ...props }: React.ComponentProps<"span">) {
+const MarkerIcon = ({ className, ...props }: React.ComponentProps<"span">) => {
   return (
     <span
       data-slot="marker-icon"
@@ -51,9 +51,9 @@ function MarkerIcon({ className, ...props }: React.ComponentProps<"span">) {
       {...props}
     />
   )
-}
+};
 
-function MarkerContent({ className, ...props }: React.ComponentProps<"span">) {
+const MarkerContent = ({ className, ...props }: React.ComponentProps<"span">) => {
   return (
     <span
       data-slot="marker-content"
@@ -64,6 +64,6 @@ function MarkerContent({ className, ...props }: React.ComponentProps<"span">) {
       {...props}
     />
   )
-}
+};
 
 export { Marker, MarkerIcon, MarkerContent, markerVariants }

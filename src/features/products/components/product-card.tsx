@@ -57,7 +57,7 @@ export const ProductCard = ({ product }: ProductCardProps) => (
         </p>
       </div>
 
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <div className="flex items-center gap-2 text-base text-muted-foreground">
         <span className="flex items-center gap-1 font-medium text-foreground">
           <StarIcon
             className="size-4 fill-amber-400 text-amber-400"
@@ -71,10 +71,10 @@ export const ProductCard = ({ product }: ProductCardProps) => (
     </CardHeader>
 
     <CardContent className="flex flex-1 flex-col gap-4 px-5 pb-5">
-      <p className="line-clamp-2 text-sm leading-6 text-muted-foreground">
+      <p className="line-clamp-2 text-base leading-6 text-muted-foreground">
         {product.description}
       </p>
-      <div className="mt-auto flex items-center justify-between gap-3 text-xs">
+      <div className="mt-auto flex items-center justify-between gap-3 text-base">
         <span className="font-mono text-muted-foreground">{product.sku}</span>
         <Badge variant="outline" className="font-normal">
           {product.initialInventory} in stock

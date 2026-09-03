@@ -64,7 +64,7 @@ export const AppHeader = () => (
           <Link href="/cart" aria-label="Cart, 0 items">
             <ShoppingCartIcon className="size-5" aria-hidden="true" />
             <span
-              className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-primary text-[0.625rem] leading-none font-semibold text-primary-foreground ring-2 ring-background"
+              className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-primary text-base leading-none font-semibold text-primary-foreground ring-2 ring-background"
               aria-hidden="true"
             >
               0

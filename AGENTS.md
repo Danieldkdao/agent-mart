@@ -7,3 +7,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## AgentMart project conventions
+
+- Use arrow functions for all project-authored JavaScript and TypeScript functions, including React components, hooks, helpers, and callbacks. Do not introduce `function` declarations or function expressions.
+- User-facing text must never render smaller than Tailwind's `text-base` size (1rem / 16px). Use `text-base` or a larger text utility; do not add `text-xs`, `text-sm`, or arbitrary font sizes below 1rem.
